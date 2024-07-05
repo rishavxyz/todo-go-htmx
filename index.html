@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://unpkg.com/98.css" />
+        <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+        <script src="https://unpkg.com/hyperscript.org@0.9.12" defer></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                corePlugins: { preflight: false }
+            }
+        </script>
+        <title>ToDo with HTMX & GO</title>
+    </head>
+
+    <style>
+        section.htmx-added {
+            animation: spawn .25s ease-out;
+        }
+        section.htmx-swapping {
+            animation: spawn .25s ease-in reverse;
+        }
+        @keyframes spawn {
+            from {
+                opacity: 0;
+                scale: 0.8;
+            }
+            to {
+                opacity: 1;
+                scale: 1;
+            }
+        }
+    </style>
+
+    <body style="background:#c0c0c0">
+        <h2 class="text-center">Todo not to do</h2>
+
+        <div class="max-w-min mx-auto flex justify-center gap-x-20">
+            <aside
+                class="space-y-5 pt-4 w-64"
+                hx-get="/api/todos"
+                hx-trigger="load"></aside>
+
+            <form class="w-64" method="post"
+                hx-post="/api/todos"
+                hx-target="aside"
+                hx-swap="beforeend settle:.25s"
+                _="on submit reset() me then add @disabled to <#submit/>
+                   on reset add @disabled to <#submit/>"
+            >
+                <div class="field-row-stacked">
+                    <label for="title">Title</label>
+                    <input id="title" name="title" type="text" required autofocus />
+                </div>
+                <div class="field-row-stacked">
+                    <label for="desc">Description</label>
+                    <textarea id="desc" name="desc" rows="8"></textarea>
+                </div>
+                <div class="field-row justify-between">
+
+                    <button id="submit" disabled
+                        _="on input from <input[name='title'] />
+                            if its value is not empty then
+                                remove @disabled
+                            else add @disabled to me"
+                    >Add todo</button>
+                    <input type="reset" />
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

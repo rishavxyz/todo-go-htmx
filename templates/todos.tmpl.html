@@ -1,0 +1,39 @@
+{{ range . }}
+<section class="window">
+    <div class="title-bar">
+        <div class="title-bar-text">{{ .Title }}</div>
+        <div class="title-bar-controls">
+            <button
+                aria-label="Maximize"
+                hx-patch="/api/todos/done/{{.Id}}"
+                hx-target="closest section"
+                hx-swap="outerHTML"
+            ></button>
+            <button
+                aria-label="Restore"
+                hx-get="/api/todos/edit/{{.Id}}"
+                hx-target="form"
+                hx-swap="outerHTML"
+            ></button>
+            <button
+                aria-label="Close"
+                hx-delete="/api/todos/{{.Id}}"
+                hx-target="closest section"
+                hx-swap="outerHTML swap:.25s"
+            ></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <p>{{ .Desc }}</p>
+    </div>
+    <div class="status-bar">
+        <time datetime="{{ .Date }}" class="status-bar-field"
+        >{{ .Date }}</time>
+
+        {{ if .Completed }}
+            <p class="status-bar-field uppercase font-bold tracking-wide"
+            >Completed</p>
+        {{ end }}
+    </div>
+</section>
+{{ end }}

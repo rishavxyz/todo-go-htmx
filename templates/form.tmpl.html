@@ -1,0 +1,24 @@
+<form class="w-64"
+    hx-patch="/api/todos/edit/{{.Id}}"
+    hx-target="body"
+    hx-swap="innerHTML"
+>
+    <div class="field-row-stacked">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" value="{{.Title}}" required
+        />
+    </div>
+    <div class="field-row-stacked">
+        <label for="desc">Description</label>
+        <textarea id="desc" name="desc" rows="8">{{ .Desc }}</textarea>
+    </div>
+    <div class="field-row justify-between">
+
+        <button>Update</button>
+        <button
+            hx-get="/"
+            hx-target="body"
+            hx-swap="innerHTML"
+        >Cancel</button>
+    </div>
+</form>
