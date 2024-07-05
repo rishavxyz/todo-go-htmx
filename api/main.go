@@ -131,6 +131,6 @@ func init() {
 	})
 }
 
-func Handler(w http.ResponseWriter, r http.Request) {
-	app.ServeHTTP(w, &r)
+func Handler(w http.ResponseWriter, r *http.Request) {
+	app.ServeHTTP(w, r)
 }
