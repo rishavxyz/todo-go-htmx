@@ -1,7 +1,7 @@
-package main
+package api
 
 import (
-	"fmt"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -35,22 +35,20 @@ func Find(id int, todos *[]Todo) (todo Todo, index int) {
 	return Todo{}, -1
 }
 
-func main() {
+var app *gin.Engine = gin.New()
+var todos []Todo = make([]Todo, 0, 100)
 
+func init() {
 	// using an array instead of a slice
 	// as no one will go over 100 of todos
-	todos := make([]Todo, 0, 100)
-
-	gin.SetMode(gin.ReleaseMode)
-	app := gin.Default()
 
 	app.LoadHTMLFiles(
-		"./index.html",
-		"./templates/todos.tmpl.html",
-		"./templates/form.tmpl.html",
+		"/index.html",
+		"/templates/todos.tmpl.html",
+		"/templates/form.tmpl.html",
 	)
 
-	app.GET("/", func(ctx *gin.Context) {
+	app.GET("/api", func(ctx *gin.Context) {
 		ctx.HTML(200, "index.html", nil)
 	})
 
@@ -131,12 +129,8 @@ func main() {
 
 		ctx.HTML(200, "index.html", nil)
 	})
+}
 
-	fmt.Println("-> Server running at http://localhost:2006/")
-
-	err := app.Run(":2006")
-
-	if err != nil {
-		panic(err)
-	}
+func Handler(w http.ResponseWriter, r http.Request) {
+	app.ServeHTTP(w, &r)
 }
